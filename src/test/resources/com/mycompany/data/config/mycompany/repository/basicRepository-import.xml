@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE gsa-template PUBLIC "-//Art Technology Group, Inc.//DTD Dynamo Security//EN" "http://www.atg.com/dtds/gsa/gsa_1.0.dtd">
+<gsa-template>
+    <import-items>
+        
+        <!-- items of type simpleItem -->
+        <add-item item-descriptor="simpleItem" id="simple001">
+            <set-property name="name"><![CDATA[Simple Item Import One]]></set-property>
+        </add-item>
+        <add-item item-descriptor="simpleItem" id="simple002">
+            <set-property name="name"><![CDATA[Simple Item Import Two]]></set-property>
+        </add-item>
+    </import-items>
+</gsa-template>

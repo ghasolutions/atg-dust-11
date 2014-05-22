@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+	<groupId>gha</groupId>
+	<artifactId>atg-dust</artifactId>
+	<version>10.1.2</version>
+	<packaging>jar</packaging>
+	<name>ATG Dust</name>
+    
+    <description>
+        This is a streamlined, updated version of ATG dust against ATG 10.1.2
+        
+        ATG DUST is a framework for building JUnit tests for applications built on the ATG Dynamo platform.
+        This framework allows one to quickly write test code that depends up Nucleus or ATG Repositories.
+        By using this framework one can drastically cut down on development time. It takes only a few seconds to start up a test
+        with a repository, but it may take multiple minutes to start up an application server. To get started with DUST,
+        take a look at http://atgdust.sourceforge.net/first-test.html. This page will walk you through the process of running
+        a basic test which starts Nucleus. After that, read the other getting started guides to describe how to create
+        standalone Junit tests which can startup repositories and use the DynamoHttpServletResponse classes.
+    </description>
+  
+  <properties>
+      <!-- path to the atg install.  Used to locate dependencies and find the runassembler -->
+      <atg.path>/usr/local/atg/current</atg.path>
+      
+      <!-- Versioning for ATG dependency jars -->
+      <atg.artifact.version>10.1.2</atg.artifact.version>
+      
+      <!-- encoding to UTF-8 for platform independence -->
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+  
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+            <filesets>
+                <fileset>
+                    <directory>testdb</directory>
+                    <followSymlinks>false</followSymlinks>
+                </fileset>
+            </filesets>
+        </configuration>
+      </plugin>
+      
+      <!--
+       Start by compiling.  Yeah compiling sounds good!
+       -->
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
+          <executions>
+              <execution>
+                  <id>compile</id>
+                  <goals><goal>compile</goal></goals>
+                  <phase>compile</phase>
+              </execution>
+          </executions>
+      </plugin>
+    
+      <!-- Resources during compile phase so test phase can use them -->
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+          <executions>
+              <execution>
+                  <id>config</id>
+                  <phase>compile</phase>
+                  <goals>
+                      <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                      <outputDirectory>target/config</outputDirectory>
+                      <resources>
+                          <resource>
+                              <directory>config</directory>
+                          </resource>
+                      </resources>
+                  </configuration>
+              </execution>
+          </executions>
+      </plugin>
+      
+      <!-- Jar -->
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.4</version>
+      </plugin>
+
+    </plugins>
+    
+    <!--
+     If you use eclipse then this will help reduce the errors in the Eclipse error log
+     -->
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-dependency-plugin</artifactId>
+                                    <versionRange>[2.0,)</versionRange>
+                                    <goals>
+                                        <goal>copy-dependencies</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <execute />
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+    
+  </build>
+  <dependencies>
+  
+    <!-- RUNTIME DEPENDENCIES -->
+
+    <!-- Unit Test yes we have runtime dependencies here -->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+    </dependency>
+
+    <!-- Log4j -->
+	<dependency>
+	    <groupId>log4j</groupId>
+	    <artifactId>log4j</artifactId>
+	    <version>1.2.17</version>
+	</dependency>  
+	
+	<!-- ddl utils from 2007 this is getting a bit aged... -->
+	<dependency>
+	    <groupId>org.apache.ddlutils</groupId>
+	    <artifactId>ddlutils</artifactId>
+	    <version>1.0</version>
+	</dependency>
+	
+    <!-- hyper sonic in memory database -->
+    <dependency>
+        <groupId>org.hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+	
+	<dependency>
+	    <groupId>commons-io</groupId>
+	    <artifactId>commons-io</artifactId>
+	    <version>1.3.2</version>
+	</dependency>
+    
+    <!-- javax servlet -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+    </dependency>
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>2.0</version>
+    </dependency>
+    
+	  
+    <!-- TEST DEPENDENCIES -->
+    <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>1.1.0.Final</version>
+        <scope>test</scope>
+    </dependency>
+  
+	
+    <!-- PROVIDED AND SYSTEM DEPENDENCIES -->
+    
+    <!-- ATG dependencies -->
+    <dependency>
+        <groupId>DSS</groupId>
+        <artifactId>resources</artifactId>
+        <version>${atg.artifact.version}</version>
+        <scope>system</scope>
+        <systemPath>${atg.path}/DSS/lib/resources.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>DSS</groupId>
+        <artifactId>classes</artifactId>
+        <version>${atg.artifact.version}</version>
+        <scope>system</scope>
+        <systemPath>${atg.path}/DSS/lib/classes.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>DPS</groupId>
+        <artifactId>resources</artifactId>
+        <version>${atg.artifact.version}</version>
+        <scope>system</scope>
+        <systemPath>${atg.path}/DPS/lib/resources.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>DPS</groupId>
+        <artifactId>classes</artifactId>
+        <version>${atg.artifact.version}</version>
+        <scope>system</scope>
+        <systemPath>${atg.path}/DPS/lib/classes.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>DAS</groupId>
+        <artifactId>resources</artifactId>
+        <version>${atg.artifact.version}</version>
+        <scope>system</scope>
+        <systemPath>${atg.path}/DAS/lib/resources.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>DAS</groupId>
+        <artifactId>classes</artifactId>
+        <version>${atg.artifact.version}</version>
+        <scope>system</scope>
+        <systemPath>${atg.path}/DAS/lib/classes.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>DAS</groupId>
+        <artifactId>servlet</artifactId>
+        <version>${atg.artifact.version}</version>
+        <scope>system</scope>
+        <systemPath>${atg.path}/DAS/lib/servlet.jar</systemPath>
+    </dependency>
+
+  </dependencies>
+</project>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE gsa-template
+        PUBLIC "-//Art Technology Group, Inc.//DTD General SQL Adapter//EN"
+        "http://www.atg.com/dtds/gsa/gsa_1.0.dtd">
+
+<gsa-template>
+	<item-descriptor name="user" >
+		<table name="my_user_token" type="auxiliary" id-column-name="user_token_id">
+			<property name="token" column-name="user_token" data-type="string" display-name="Token" category="Token" />
+		</table>
+    </item-descriptor>
+</gsa-template>
