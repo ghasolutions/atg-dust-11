@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,6 +45,7 @@ import org.apache.log4j.Logger;
 import atg.adapter.gsa.xml.TemplateParser;
 import atg.adapter.gsa.xml.VersioningContextUtil;
 import atg.adapter.version.VersionRepository;
+import atg.core.util.StringUtils;
 import atg.naming.NameContext;
 import atg.nucleus.Configuration;
 import atg.nucleus.GenericService;
@@ -73,7 +75,7 @@ public class GSATestUtils {
   private static GSATestUtils SINGLETON_DEFAULT = null;
   private static GSATestUtils SINGLETON_VERSIONED = null;
   
-  Logger mLogger = Logger.getLogger(GSATestUtils.class);
+  static Logger mLogger = Logger.getLogger(GSATestUtils.class);
 
   /**
    * @param pB
@@ -718,6 +720,7 @@ public class GSATestUtils {
       String pRepositoryPath, String[] pDefinitionFiles, String pCreateSQLAbsolutePath, String pDropSQLAbsolutePath, String[] pImportFiles) throws IOException {
     return createRepositoryPropertiesFile(pRoot, pRepositoryPath, pDefinitionFiles, pCreateSQLAbsolutePath, pDropSQLAbsolutePath, pImportFiles, null);
   }
+  
   // ---------------------------------
   /**
    * Creates a .properties file for the given repository.
@@ -734,7 +737,7 @@ public class GSATestUtils {
    * @param pJTDataSourceName
    * @throws IOException
    */
-  public  File createRepositoryPropertiesFile(File pRoot,
+  public File createRepositoryPropertiesFile(File pRoot,
                                               String pRepositoryPath, 
                                               String[] pDefinitionFiles, 
                                               String pCreateSQLAbsolutePath, 
@@ -803,7 +806,7 @@ public class GSATestUtils {
         Object obj = this.getClass().getClassLoader().getResource(pImportFiles[i]);
         
         if (obj != null) {
-          mLogger.debug("Import file " + pDefinitionFiles[i] + 
+          mLogger.debug("Import file " + pImportFiles[i] + 
         		        " Does not exist in configpath. But it does in classpath. Copying over to configpath");
           
           copyToConfigpath(pRoot, pImportFiles[i]);
@@ -870,9 +873,93 @@ public class GSATestUtils {
     
     return NucleusTestUtils.createProperties(repositoryName, root, clazz, props);
   }
+
+  /**
+   * <p>Creates a repository properties file containing only the entries specified in pProps.  this
+   * is ideal for extending an existing definition file as this method does not write any $class 
+   * attribute values
+   * 
+   * @param pClassRelativeTo
+   * @param pRepositoryPath
+   * @param pImportFiles
+   */
+  public void createRepositoryPropertiesFile(Class<?> pClassRelativeTo, 
+		                                     String pRepositoryPath, 
+		                                     String[] pImportFiles,
+		                                     Properties pProps) throws IOException {
+	  
+	  // figure out our config folder name
+      String packageName = StringUtils.replace(pClassRelativeTo.getPackage().getName(), '.', "/");
+	  String baseConfigDirName = pClassRelativeTo.getSimpleName() + "/config";
+
+      String configFolder = packageName + "/data/" + baseConfigDirName;
+	  
+      // see if the convention-driven config directory already exists
+      URL dataURL = pClassRelativeTo.getClassLoader().getResource(configFolder);
+
+      // Mkdir
+      if (dataURL == null) {
+        URL root = pClassRelativeTo.getClassLoader().getResource(packageName);
+
+        File f = new File(root.getFile());
+        File f2 = new File(f, "/data/" + baseConfigDirName);
+        f2.mkdirs();
+
+        dataURL = NucleusTestUtils.class.getClassLoader().getResource(configFolder);
+      }
+      
+      if (dataURL == null) {
+          mLogger.warn("Could not find resource \"" + configFolder + "\" in CLASSPATH");
+          
+      } else {
+    	  // we now have a directory we can play in.
+    	  
+    	  // get our properties file going
+          Properties props = pProps;
+          if (props == null) {
+        	  props = new Properties();
+          }
+          
+          int endIndex = pRepositoryPath.lastIndexOf("/");
+          String repositoryDir = pRepositoryPath.substring(0, endIndex);
+          String repositoryName = pRepositoryPath.substring(endIndex + 1, pRepositoryPath.length());
+          
+          File repositoryLoc = new File(dataURL.getFile(), repositoryDir);
+          if(!repositoryLoc.exists()) {
+        	 repositoryLoc.mkdirs(); 
+          }
+          
+          // build our importFiles property
+          if(pImportFiles != null){
+          	
+            StringBuffer importFiles = new StringBuffer();
+            
+            for (int i = 0; i < pImportFiles.length; i++) {
+              
+              if (!new File(dataURL.getFile(), pImportFiles[i]).exists()) {
+                throw new AssertionError("Repository import file " + pImportFiles[i] + 
+              		                     " not found in classpath or configpath.");
+              }
+
+              importFiles.append(new File(dataURL.getFile(), pImportFiles[i]).getAbsolutePath());
+              
+              if (i < (pImportFiles.length - 1)) {
+              	importFiles.append(",");
+              }
+            }
+            
+            props.put("importFiles", importFiles.toString());
+            props.put("importEveryStartup", "true");
+          }
+          
+
+          NucleusTestUtils.createProperties(repositoryName, repositoryLoc, props);
+      }
+  }
+  
   
 /**
-   * @param pRoot
+ * @param pRoot
  * @param pRepositoryPath
  * @param pRepositoryName
  * @return

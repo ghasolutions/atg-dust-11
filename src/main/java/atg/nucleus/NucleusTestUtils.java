@@ -159,37 +159,85 @@ public class NucleusTestUtils {
    * @throws IOException
    */
   public static File createProperties(String pComponentName, File pConfigDir, String pClass, Properties pProps)
-  throws IOException {
-  File prop;
-  if (pConfigDir == null)
-    prop = new File("./" + pComponentName + ".properties");
-  else {
-    pConfigDir.mkdirs();
-    prop = new File(pConfigDir, pComponentName + ".properties");
-    new File(prop.getParent()).mkdirs();
+		  throws IOException {
+	  
+	  File prop;
+	  if (pConfigDir == null) {
+		  prop = new File("./" + pComponentName + ".properties");
+	  } else {
+	    pConfigDir.mkdirs();
+	    prop = new File(pConfigDir, pComponentName + ".properties");
+	    new File(prop.getParent()).mkdirs();
+	  }
+	  
+	  if (prop.exists()) {
+		  prop.delete();
+	  }
+	  prop.createNewFile();
+	  FileWriter fw = new FileWriter(prop);
+	  String classLine = "$class=" + pClass + "\n";
+	  try {
+	    if (pClass != null) {
+	    	fw.write(classLine);
+	    }
+	    if (pProps != null) {
+	      Iterator iter = pProps.keySet().iterator();
+	      while (iter.hasNext()) {
+	        String key = (String) iter.next();
+	        String thisLine = key + "=" + StringUtils.replace(pProps.getProperty(key),'\\', "\\\\") + "\n";
+	        fw.write(thisLine);
+	      }
+	    }
+	  } finally {
+	    fw.flush();
+	    fw.close();
+	  }
+	  return prop;
+  }
+
+  /**
+   * Creates a .properties file intended as an extension of another (does not supply class).
+   * @param pComponentName Name of the component
+   * @param pConfigDir Name of the configuration directory. If null,
+   *   will add to the current working directory.
+   * @param pProps Other properties of the component.
+   * @return The created file. 
+   * @throws IOException
+   */
+  public static File createProperties(String pComponentName, File pConfigDir, Properties pProps)
+		  throws IOException {
+	  
+	  File prop;
+	  if (pConfigDir == null) {
+		  prop = new File("./" + pComponentName + ".properties");
+	  } else {
+	    pConfigDir.mkdirs();
+	    prop = new File(pConfigDir, pComponentName + ".properties");
+	    new File(prop.getParent()).mkdirs();
+	  }
+	  
+	  if (prop.exists()) {
+		  prop.delete();
+	  }
+	  prop.createNewFile();
+	  FileWriter fw = new FileWriter(prop);
+	  try {
+	    if (pProps != null) {
+	      Iterator iter = pProps.keySet().iterator();
+	      while (iter.hasNext()) {
+	        String key = (String) iter.next();
+	        String thisLine = key + "=" + StringUtils.replace(pProps.getProperty(key),'\\', "\\\\") + "\n";
+	        fw.write(thisLine);
+	      }
+	    }
+	  } finally {
+	    fw.flush();
+	    fw.close();
+	  }
+	  return prop;
   }
   
-  if (prop.exists()) prop.delete();
-  prop.createNewFile();
-  FileWriter fw = new FileWriter(prop);
-  String classLine = "$class=" + pClass + "\n";
-  try {
-    if (pClass != null) fw.write(classLine);
-    if (pProps != null) {
-      Iterator iter = pProps.keySet().iterator();
-      while (iter.hasNext()) {
-        String key = (String) iter.next();
-        String thisLine = key + "=" + StringUtils.replace(pProps.getProperty(key),'\\', "\\\\") + "\n";
-        fw.write(thisLine);
-      }
-    }
-  }
-  finally {
-    fw.flush();
-    fw.close();
-  }
-  return prop;
-}
+  
   /**
    * Starts Nucleus using the given config directory
    * @param configpath the config path directory entry
@@ -452,6 +500,7 @@ public class NucleusTestUtils {
    *
    * @param pModules the list of modules to use to calculate the
    *  Nucleus configuration path.
+   *  @param pConfigPath an additional configuration path applied after modules
    * @param pClassRelativeTo the class whose name and package
    *  will be used for the {packageName}/config/{ClassName}/data directory 
    * @param pInitialService the nucleus path of the Nucleus component
@@ -461,11 +510,13 @@ public class NucleusTestUtils {
    *   with the shutdownNucleus method.
    * @exception ServletException if an error occurs
    */
-  public static Nucleus startNucleusWithModules(String[] pModules, 
+  public static Nucleus startNucleusWithModules(String[] pModules,
+		                                        File pConfigPath,
 		                                        Class pClassRelativeTo, 
 		                                        String pInitialService) throws ServletException {
     return startNucleusWithModules(
-            new NucleusStartupOptions(pModules, 
+            new NucleusStartupOptions(pModules,
+            		                  pConfigPath,
             		                  pClassRelativeTo, 
             		                  pClassRelativeTo.getSimpleName() + "/config", 
             		                  pInitialService));
@@ -507,6 +558,7 @@ public class NucleusTestUtils {
    *
    * @param pModules the list of modules to use to calculate the
    *  Nucleus configuration path.
+   *  @param pConfigPath an additional configuration path applied after modules
    * @param pClassRelativeTo the class whose package the config/data
    *  (or pBaseConfigDirectory/data) should be relative in.
    * @param pBaseConfigDirectory the base configuration directory. If
@@ -520,12 +572,14 @@ public class NucleusTestUtils {
    * @exception ServletException if an error occurs
    */
   public static Nucleus startNucleusWithModules(String[] pModules, 
+		                                        File pConfigPath,
 		                                        Class pClassRelativeTo, 
 		                                        String pBaseConfigDirectory,
 		                                        String pInitialService) 
 		                                                               throws ServletException {
 	  
-    return startNucleusWithModules(new NucleusStartupOptions(pModules, 
+    return startNucleusWithModules(new NucleusStartupOptions(pModules,
+    		                                                 pConfigPath,
     		                                                 pClassRelativeTo, 
     		                                                 pBaseConfigDirectory, 
     		                                                 pInitialService));
@@ -579,6 +633,7 @@ public class NucleusTestUtils {
 	  
     log.debug("---------------------");
 	log.debug("startNucleusWithModules(): begin");
+	log.debug("configPath=" + pOptions.getConfigPath());
 	log.debug("classRelativeTo=" + pOptions.getClassRelativeTo());
 	log.debug("baseConfigDirectory=" + pOptions.getBaseConfigDirectory());
 	log.debug("initialService=" + pOptions.getInitialService());
@@ -635,7 +690,18 @@ public class NucleusTestUtils {
     		                                                       false, 
     		                                                       null);
 
-      log.debug("configpath='" + configpath + "'");
+      log.debug("initial configpath='" + configpath + "'");
+      
+      
+      // check to see if we're supposed to apply an additional configuration path after the 
+      // modules configuration
+      File addlConfigPath = pOptions.getConfigPath();
+      
+      if ((addlConfigPath != null) && addlConfigPath.exists()) {
+    	  log.debug("additionalConfigPath=" + addlConfigPath.getAbsolutePath());
+    	  
+    	  configpath = configpath + File.pathSeparator + addlConfigPath.getAbsolutePath();
+      }
       
       // use the NucleusTestUtils config dir as a base, since it
       // empties out license checks, etc.
@@ -972,8 +1038,7 @@ public class NucleusTestUtils {
     private String[] mModules;
     
     /** Directory which defines an additional configuration layer to be appended after mModules */
-    
-    
+    private File mConfigPath = null;
     
     
     /** Class whose package data subdir is relative to. */
@@ -1007,6 +1072,7 @@ public class NucleusTestUtils {
      *
      * @param pModules the list of modules to use to calculate the
      *  Nucleus configuration path.
+     * @param pConfigPath an additional configuration path applied after modules
      * @param pClassRelativeTo the class whose name and package
      *  will be used for the {packageName}/config/{simpleClassName}/data directory 
      * @param pInitialService the nucleus path of the Nucleus component
@@ -1016,13 +1082,12 @@ public class NucleusTestUtils {
      *   with the shutdownNucleus method.
      * @exception ServletException if an error occurs
      */
-    public NucleusStartupOptions(String[] pModules, Class pClassRelativeTo, String pInitialService) {
-
-      
-      mModules = pModules;
-      mClassRelativeTo = pClassRelativeTo;
-      mInitialService = pInitialService;
-      mBaseConfigDirectory = pClassRelativeTo.getSimpleName() + "/config";
+    public NucleusStartupOptions(String[] pModules, File pConfigPath, Class pClassRelativeTo, String pInitialService) {
+	      mModules = pModules;
+	      mConfigPath = pConfigPath;
+	      mClassRelativeTo = pClassRelativeTo;
+	      mInitialService = pInitialService;
+	      mBaseConfigDirectory = pClassRelativeTo.getSimpleName() + "/config";
     }
 
 
@@ -1046,6 +1111,7 @@ public class NucleusTestUtils {
      *
      * @param pModules the list of modules to use to calculate the
      *  Nucleus configuration path.
+     * @param pConfigPath an additional configuration path applied after modules
      * @param pClassRelativeTo the class whose package the config/data
      *  (or pBaseConfigDirectory/data) should be relative in.
      * @param pBaseConfigDirectory the base configuration directory. If
@@ -1058,15 +1124,17 @@ public class NucleusTestUtils {
      *   with the shutdownNucleus method.
      * @exception ServletException if an error occurs
      */
-    public NucleusStartupOptions(String[] pModules, Class pClassRelativeTo,
-                                 String pBaseConfigDirectory,
-                                 String pInitialService) {
+    public NucleusStartupOptions(String[] pModules, File pConfigPath, Class pClassRelativeTo,
+                                 String pBaseConfigDirectory, String pInitialService) {
 
       mModules = pModules;
+      mConfigPath = pConfigPath;
       mClassRelativeTo = pClassRelativeTo;
       mInitialService = pInitialService;
       mBaseConfigDirectory = pBaseConfigDirectory;
     }
+    
+    
     
     /** Return the list of modules for starting Nucleus. These modules
      * are the modules whose config path will be included. */
@@ -1097,6 +1165,17 @@ public class NucleusTestUtils {
       return mBaseConfigDirectory;
     }
 
+    //-------------------------------------
+    // property: configPath
+    /**
+     * Set the additional config path.  This is the directory that will be 
+     * added to the atg startup configuration after the modules paths but 
+     * before any paths applied as part of the test framework
+     * 
+     */
+    public File getConfigPath() {
+    	return mConfigPath;
+    }
 
     //-------------------------------------
     // property: layers

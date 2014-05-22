@@ -2,8 +2,6 @@ package com.mycompany;
 
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Properties;
 
 import javax.servlet.ServletException;
 
@@ -12,19 +10,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import atg.adapter.gsa.GSARepository;
 import atg.adapter.gsa.GSATestUtils;
-import atg.dtm.TransactionDemarcation;
 import atg.nucleus.Nucleus;
 import atg.nucleus.NucleusTestUtils;
-import atg.nucleus.servlet.NucleusServlet;
-import atg.repository.MutableRepository;
-import atg.repository.MutableRepositoryItem;
 import atg.repository.Repository;
 import atg.repository.RepositoryItem;
 import atg.test.util.DBUtils;
-import atg.test.util.FileUtil;
-
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertNotNull;
 
@@ -57,13 +48,28 @@ public class ExtendedRepositoryTest {
 	 */
     @BeforeClass
     public static void setUp() throws Exception {
-    	
     	mLogger.info("setUp()");
     	
         try {
-             mNucleus = NucleusTestUtils.startNucleusWithModules(new String[] { "DAS","DPS"},
-            		                                             ExtendedRepositoryTest.class,
-            		                                             REPOSITORY_PATH);
+        	
+            // identify our additional config path.  In this case its the config path for our project
+        	//
+            File projectConfigPath = new File("target/config".replace("/", File.separator));
+            
+            // create our test repository properties file and point it to our test import
+            // file location so we can load the repository on startup with test data
+            // if we weren't dependent upon test data then we could skip this step
+            //
+            GSATestUtils testUtils = GSATestUtils.getGSATestUtils();
+            testUtils.createRepositoryPropertiesFile(ExtendedRepositoryTest.class, 
+            		                                 REPOSITORY_PATH, 
+            		                                 new String[] {"atg/userprofiling/userProfile-import.xml"}, 
+            		                                 null);
+            
+            mNucleus = NucleusTestUtils.startNucleusWithModules(new String[] { "DAS","DPS"},
+            		                                            projectConfigPath,
+            		                                            ExtendedRepositoryTest.class,
+            		                                            REPOSITORY_PATH);
 
         } catch (ServletException e) {
             fail(e.getMessage());
@@ -99,7 +105,14 @@ public class ExtendedRepositoryTest {
 	public void testSetup() throws Exception {
     	
     	mLogger.info("testSetup()");
+        Repository r = (Repository) mNucleus.resolveName(REPOSITORY_PATH);
         
+        RepositoryItem item = r.getItem("user00001", "user");
+        assertNotNull(item);
+        
+        // make sure our repository extension was picked up
+        String userToken = (String) item.getPropertyValue("token");
+        assertNotNull(userToken);
     }
     
 }

@@ -15,7 +15,6 @@ import atg.adapter.gsa.GSATestUtils;
 import atg.dtm.TransactionDemarcation;
 import atg.nucleus.Nucleus;
 import atg.nucleus.NucleusTestUtils;
-import atg.nucleus.servlet.NucleusServlet;
 import atg.repository.MutableRepository;
 import atg.repository.MutableRepositoryItem;
 import atg.repository.Repository;
@@ -58,7 +57,6 @@ public class BasicRepositoryTest {
 	 */
     @BeforeClass
     public static void setUp() throws Exception {
-    	
     	mLogger.info("setUp()");
     	
         // setup the repository

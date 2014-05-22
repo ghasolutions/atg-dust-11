@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE gsa-template PUBLIC "-//Art Technology Group, Inc.//DTD Dynamo Security//EN" "http://www.atg.com/dtds/gsa/gsa_1.0.dtd">
+<gsa-template>
+    <import-items>
+        <add-item id="user00001" item-descriptor="user">
+            <set-property name="firstName"><![CDATA[Eric]]></set-property>
+            <set-property name="lastName"><![CDATA[Adams]]></set-property>
+            <set-property name="login"><![CDATA[eric@example.com]]></set-property>
+            <set-property name="password"><![CDATA[865a7f03bb6da05c84e4a417837506ac1609cac493950f556c291ef76e1bbfa8]]></set-property>
+            <set-property name="gender"><![CDATA[male]]></set-property>
+            <set-property name="dateOfBirth"><![CDATA[1/29/1983]]></set-property>
+            <set-property name="email"><![CDATA[eric@example.com]]></set-property>
+            <set-property name="token"><![CDATA[1234567890]]></set-property>
+        </add-item>
+    </import-items>
+</gsa-template>
