@@ -9,7 +9,7 @@
 ATG Dust for ATG 10.1.2
 
 
-This is my rework of ATG Dust to bring it up to date with ATG 10.1.2.  I have also made some convenience modifications to help me efforts in setting up tests.
+This is my rework of ATG Dust to bring it up to date with ATG 10.1.2.  I have also made some convenience modifications to help me efforts in setting up tests.  Why ATG 10.1.2 and not the latest?  Because my current work is on that version.  I'll get around to upgrading to the latest ATG version at some point.  I suspect the modifications I made will work fine with the latest.
 
 The original open source ATG Dust project can be found at http://atgdust.sourceforge.net
 
