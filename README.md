@@ -127,7 +127,7 @@ When defining test cases it would be incredibly helpful to stick with a conventi
 ./resources/test/data/test.ProfileFormHandlerTest/ConfigurableConfigCreationFilter.properties
 
 
-The above is from the ATG Dust sample test configurations.  There are 5 separate conventions used above:
+The above is from the ATG Dust sample test configurations.  There are 5 separate configuration roots used above:
 
 
    * /resources
