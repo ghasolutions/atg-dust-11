@@ -194,10 +194,12 @@ I’m  not too keen on these multi-argument methods because they get confusing q
                                            String pCreateSQLAbsolutePath, 
                                            String pDropSQLAbsolutePath, 
                                            String[] pImportFile, 
-                                           boolean pLogging, 
+                                           boolean pLogging,
                                            String pFakeXADataSourceComponentName, 
                                            String pJTDataSourceComponentName) throws IOException, Exception {
+...
 
+}
 
 
 pRoot - This is the root location for the configuration layer.  Sample tests indicate a convention of target/test-classes/config as the location where GSATestUtils generates configuration files to support the repository.
