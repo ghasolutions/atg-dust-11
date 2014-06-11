@@ -1,7 +1,18 @@
+            Apache License
+       Version 2.0, January 2004
+     http://www.apache.org/licenses/
+
+
+
+================================================
+================================================
 ATG Dust for ATG 10.1.2
 
 
-Each of the topics below include a best practice example test in the ATG Dust 10.1.2 framework which is my reworking of the original.
+This is my rework of ATG Dust to bring it up to date with ATG 10.1.2.  I have also made some convenience modifications to help me efforts in setting up tests.
+
+The original open source ATG Dust project can be found at http://atgdust.sourceforge.net
+
 
 
 =================================================
@@ -344,6 +355,7 @@ ATG Dust can be pretty useful in specific areas.  In particular I like it for cr
 ATG Dust can help you write tests against your pipeline configuration.
 
 Before applying ATG Dust I encourage you attempt to use mainstream approaches like Mockito.  This will reduce the tech specialization your team requires and it will provide familiar structures to those who have worked with software outside the realm of ATG.  That said there are conditions (described above) where ATG Dust is very handy to have.
+
 
 
 
