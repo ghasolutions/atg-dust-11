@@ -107,7 +107,7 @@ Rant warning...
 
 When writing tests for ATG you will inevitably need to define configuration files (*.properties) to write your tests against.  I tend to prefer atomic testing and the thought of sharing a single configuration layer for all the tests frustrates me.  I would much prefer and encourage each test to provide its own discreet set of configuration files.  This may not always be practical in which case I would encourage package level configuration.
 
-When defining test cases it would be incredibly helpful to stick with a convention.  Otherwise you’ll end up with the configuration mess you see within the original ATG Dust examples.  Consider that only a few tests resulted in this mess from the original ATG Dust project:
+When defining test cases it would be incredibly helpful to stick with a convention.  Otherwise you’ll end up with the confusing configuration you see within the original ATG Dust examples.  Consider that only a few tests resulted in this file structure:
 
 ./resources/atg/adapter/gsa/rep1.xml
 ./resources/atg/adapter/gsa/rep2.xml
@@ -154,14 +154,12 @@ The above is from the ATG Dust sample test configurations.  There are 5 separate
    * /resources/test/data
 
 
-That’s only from a few tests.  Imagine what this would look like with hundreds of tests.
+I'm pretty sure the team that put this together was more focused on providing examples of various tests than enforcing a particular convention.
+
+To ATG Dust's credit some classes like GSATestUtils and NucleusTestUtils attempt to provide conventions for the location of your test configuration files.  Note that ATG Dust doesn’t strictly enforce conventions and they probably shouldn't.  It should be up to each implementation team to determine how they want to organize.
 
 
-
-To ATG Dust's credit some classes like GSATestUtils and NucleusTestUtils attempt to provide conventions for the location of your test configuration files.  Note that ATG Dust doesn’t strictly enforce conventions with respect to where you put your test configuration files.  I suppose they probably should not but the lack of enforcement can lead to a big mess when it comes to reviewing your test/resources directory tree.
-
-
-Any test where you need to provide ATG configuration files should follow the convention of placing the configuration for the test in a directory as follows:
+Any test where you need to provide ATG configuration files should follow some sort of convention.  My preferred convention is borrowed from a particular example within ATG Dust.  The convention is as follows:
 
 
 ${basedir}/test/resources/com/mycompany/data/TestSomething/config
@@ -180,7 +178,7 @@ config                     -  a directory named 'config'
 
 
 
-This is a convention put forth within ATG Dust and using certain methods the right way will result in this convention being utilized.  Naturally this may not be practical for all cases.  As a general guideline test configurations should attempt to keep the test-specific configurations confined to within the package name for the test.  Just be thoughtful about where these are ending up and think ahead to what you want your resources directory to look like as more tests are added to the system.
+This is a convention put forth within ATG Dust and using certain methods the right way will result in this convention being utilized.  This may not be practical for all cases.  As a general guideline test configurations should attempt to keep the test-specific configurations confined to within the package name for the test.  Just be thoughtful about where these are ending up and think ahead to what you want your resources directory to look like as more tests are added to the system.
 
 
 
