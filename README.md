@@ -16,6 +16,18 @@ My thanks to the original team that brought ATG Dust to the community.  I've nee
 The original open source ATG Dust project can be found at http://atgdust.sourceforge.net
 
 
+=================================================
+=================================================
+Usage
+
+This project is build using maven and serves to generate the artifacts (jar file) required to include in your project either as another maven dependency or standalone jar in case you are using ATG's ANT structure.
+
+mvn clean install
+
+
+This project includes a few sample tests to help you get started.  For more expansive tests you should refer to the original ATG Dust project.
+
+
 
 =================================================
 =================================================
