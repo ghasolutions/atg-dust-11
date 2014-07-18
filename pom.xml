@@ -112,7 +112,63 @@
               </execution>
           </executions>
       </plugin>
-
+      
+      <!-- For projects that don't use Maven (unfortunately common in ATG land)
+           copy the dependencies into a dependency jar that can be included.
+       
+           One could use the maven-assembly-plugin and set the 'jar-with-dependencies'
+           descriptorRef.  This introduces a problem because it operates on the 
+           dependency scope and will include anything with a 'compile' or 'runtime'
+           dependency.  Even if another application is not using Maven it is likely
+           that application already has some of these dependencies in its classpath.
+           For example javax.servlet (required for Dust compilation) is likely to be there.
+       
+           So this will vary by project and you WILL NOT NEED the next two plugins at all
+           if you're on Maven.  Again this is just to satisfy the needs of projects that
+           do not use Maven.  The old-school ATG ANT framework comes to mind here.
+       
+           To control which dependencies are included in the dependency jar use the
+           includeGroupIds attribute in the maven-dependency-plugin
+       
+       -->
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.8</version>
+          <executions>
+              <execution>
+                  <id>copy-dependencies</id>
+                  <phase>package</phase>
+                  <goals>
+                      <goal>unpack-dependencies</goal>
+                  </goals>
+                  <configuration>
+                      <includeArtifactIds>commons-beanutils-core,commons-collections,commons-io,commons-lang,ddlutils,hsqldb,jsp-api</includeArtifactIds>
+                      <!-- <includeGroupIds>org.hsqldb</includeGroupIds> -->
+                      <outputDirectory>${project.build.directory}/dust-dependencies</outputDirectory>
+                      <overWriteReleases>false</overWriteReleases>
+                      <overWriteSnapshots>true</overWriteSnapshots>
+                      <excludeTransitive>true</excludeTransitive>
+                  </configuration>
+              </execution>
+          </executions>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.4</version>
+          <executions>
+              <execution>
+                  <id>assemble-dependencies</id>
+                  <goals><goal>single</goal></goals>
+                  <phase>package</phase>
+                  <configuration>
+                      <descriptor>assembly/dependencies.xml</descriptor>
+                  </configuration>
+              </execution>
+          </executions>
+      </plugin>
+      
     </plugins>
     
     <!--
@@ -209,6 +265,30 @@
   
 	
     <!-- PROVIDED AND SYSTEM DEPENDENCIES -->
+    
+    <!-- The following 
+     
+     are not required to build this project. It is included so
+     it can be added to the dependency jar to support a project that for
+     some reason did not have these in its classpath -->
+    <dependency>
+	    <groupId>commons-beanutils</groupId>
+	    <artifactId>commons-beanutils-core</artifactId>
+	    <version>1.8.3</version>
+        <scope>provided</scope>
+	</dependency>
+    <dependency>
+	    <groupId>commons-collections</groupId>
+	    <artifactId>commons-collections</artifactId>
+	    <version>3.2.1</version>
+        <scope>provided</scope>
+	</dependency>
+    <dependency>
+	    <groupId>commons-lang</groupId>
+	    <artifactId>commons-lang</artifactId>
+	    <version>2.6</version>
+        <scope>provided</scope>
+	</dependency>
     
     <!-- ATG dependencies -->
     <dependency>
