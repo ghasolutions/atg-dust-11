@@ -33,7 +33,9 @@ This project includes a few sample tests to help you get started.  For more expa
 =================================================
 Log4J
 
-Its easy to forget but its very nice to run tests within Eclipse and actually have output logged in the eclipse console.  To do this just make sure you have a log4j.xml added to your /resources directory.  There are a few in the source of the DUST framework you can seek out and re-use.
+Its easy to forget but its very nice to run tests within Eclipse and actually have output logged in the eclipse console.  To do this just make sure you have a log4j.xml added to your /resources directory.  There are a few in the source of the DUST framework you can seek out and re-use.  
+
+See src/test/resources/log4j.xml
 
 
 
