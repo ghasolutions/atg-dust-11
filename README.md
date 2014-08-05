@@ -202,6 +202,8 @@ config                     -  a directory named 'config'
 
 This is a convention put forth within ATG Dust and using certain methods the right way will result in this convention being utilized.  This may not be practical for all cases.  As a general guideline test configurations should attempt to keep the test-specific configurations confined to within the package name for the test.  Just be thoughtful about where these are ending up and think ahead to what you want your resources directory to look like as more tests are added to the system.
 
+My use of Dust on my current project has been fairly lightweight.  Usually I use it to set up a repository so I can test manager classes.  Once I start getting away from the manager classes I rely upon Mockito.  I find this particular config convention to work out well as there are only a few tests I need to set up ATG configurations for.
+
 
 
 
@@ -344,9 +346,6 @@ For testing conventions callers should pass either 'null' or 'pClassRelativeTo.g
             |- mycompany
              |- data
                |- AnotherTest
-             |- atg
-             |- userprofiling
-             |- userProfile.xml
                  |- config
                    |- atg
                      |- userprofiling
