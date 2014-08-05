@@ -31,6 +31,14 @@ This project includes a few sample tests to help you get started.  For more expa
 
 =================================================
 =================================================
+Log4J
+
+Its easy to forget but its very nice to run tests within Eclipse and actually have output logged in the eclipse console.  To do this just make sure you have a log4j.xml added to your /resources directory.  There are a few in the source of the DUST framework you can seek out and re-use.
+
+
+
+=================================================
+=================================================
 Testing with Repositories
 
 
@@ -327,20 +335,20 @@ For testing conventions callers should pass either 'null' or 'pClassRelativeTo.g
          |- com
             |- mycompany
              |- SomeManagerTest.java
-|- AnotherTest.java
-|- AndAnotherTest.java
+             |- AnotherTest.java
+             |- AndAnotherTest.java
       |- resources
          |- com
             |- mycompany
              |- data
-|- AnotherTest
-|- atg
-|- userprofiling
-|- userProfile.xml
-             |- config
-|- atg
-|- userprofiling
-|- userProfile.xml
+               |- AnotherTest
+             |- atg
+             |- userprofiling
+             |- userProfile.xml
+                 |- config
+                   |- atg
+                     |- userprofiling
+                       |- userProfile.xml
 
 
 
