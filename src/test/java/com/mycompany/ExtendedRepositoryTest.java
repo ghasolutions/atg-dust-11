@@ -33,6 +33,8 @@ public class ExtendedRepositoryTest {
 	protected static Nucleus mNucleus = null;
 	protected static DBUtils mDatabaseUtil = null;
 	
+	// The ATG namespace name of the repository we are testing
+	//
 	protected static final String REPOSITORY_PATH = "atg/userprofiling/ProfileAdapterRepository";
 	
 	
@@ -52,13 +54,18 @@ public class ExtendedRepositoryTest {
     	
         try {
         	
-            // identify our additional config path.  In this case its the config path for our project
+            // identify our additional config path to read the repository definition
+        	// from.  In this case it is the actual config path for our applcation 
+        	// project located at /config
         	//
             File projectConfigPath = new File("target/config".replace("/", File.separator));
             
             // create our test repository properties file and point it to our test import
-            // file location so we can load the repository on startup with test data
-            // if we weren't dependent upon test data then we could skip this step
+            // file location so we can load the repository on startup with test data.
+            // The confention in GSATestUtils is to look at for a config directory 
+            // underneath resources/${class-package-path}/{class-name}/config/
+            //
+            // If we weren't dependent upon test data then we could skip this step
             //
             GSATestUtils testUtils = GSATestUtils.getGSATestUtils();
             testUtils.createRepositoryPropertiesFile(ExtendedRepositoryTest.class, 
@@ -66,6 +73,9 @@ public class ExtendedRepositoryTest {
             		                                 new String[] {"atg/userprofiling/userProfile-import.xml"}, 
             		                                 null);
             
+            // Start up our nucleus with the declared ATG modules and then apply
+            // our additional config path at the end
+            //
             mNucleus = NucleusTestUtils.startNucleusWithModules(new String[] { "DAS","DPS"},
             		                                            projectConfigPath,
             		                                            ExtendedRepositoryTest.class,
@@ -101,6 +111,10 @@ public class ExtendedRepositoryTest {
 	 * **********************************************************
 	 */
 	
+    /*
+     * Test that we got a repository up and started.  Then test that our
+     * property addition to the repository was picked up.
+     */
     @Test
 	public void testSetup() throws Exception {
     	

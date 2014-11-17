@@ -25,9 +25,10 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * <p>This test illustrates how to create a repository from a definition file 
- * contained completely within the project's test directory.  This is useful for
- * tests on repositories created within the project or tests that only need to
- * operate on specific repository definitions.
+ * contained completely within the project's test directory.  
+ * 
+ * <p>This is suitable for tests on repositories created by the project or tests 
+ * that only need to operate on specific repository definitions.
  * 
  * <p>If you need a test that tests the extension of an existing ATG repository
  * see ExtendedRepositoryTest
@@ -42,6 +43,8 @@ public class BasicRepositoryTest {
 	protected static Nucleus mNucleus = null;
 	protected static DBUtils mDatabaseUtil = null;
 	
+	// The ATG namespace name of the repository we are testing
+	//
 	protected static final String REPOSITORY_PATH = "mycompany/repository/BasicRepository";
 	
 	
@@ -60,24 +63,37 @@ public class BasicRepositoryTest {
     	mLogger.info("setUp()");
     	
         // setup the repository
+    	//
+    	
+    	// start by defining where our configuration directory is going to be.  This will
+    	// be automatically generated during the test operation.
+    	//
         File configpath = new File("target/test-classes/generated-config".replace("/", File.separator));
 
-        // Specify the path to our repository definition file.
+        // Specify the atg config path to our repository definition file.
+        //
         final String[] definitionFiles = { "mycompany/repository/basicRepository.xml" };
         mLogger.info(" definitionFile[0]=" + definitionFiles[0]);
         
-        // Specify the path to our repository data import file.
+        // Specify the atg config path to our repository data import file.
+        //
         final String[] importFiles = { "mycompany/repository/basicRepository-import.xml" };
         mLogger.info(" importFile[0]=" + importFiles[0]);
 
+        
+        // Now that we've defined the location where our configs will be we now 
+        // need to copy the repository configuration and import files to that location.
+        
+        
         // There are a couple ways to get our repository definition file into the 
         // configuration layer that will be automatically generated during this test
         //
         // 1. If we include the definition file in the src/test/resources then the 
         //    GSATestUtils will pick it up and copy it.  This is handy if we just 
         //    need to verify certain code works against some repository definition.
-        //    However it makes for some messy config layers within the test directory.
-        //    Best to stick with a convention and see #2 below
+        //    For the purposes of this test we have done this.  However it makes for
+        //    some some messy config layers within the test directory.  For project
+        //    work it is best to stick with a convention so I suggest #2 below
         //
         // 2. We could copy it directly from some location within our filesystem.
         //    This may be the more desired mechanism as it allows us to copy the 
@@ -86,7 +102,8 @@ public class BasicRepositoryTest {
         //    definitions do not break functionality.
         //
         
-        // Copy all properties and definition files to the previously configured configpath
+        // Copy all properties and definition files from our test resources
+        // directory to the previously defined configpath
         //
         FileUtil.copyDirectory("src/test/resources/com/mycompany/data/config", 
         		                configpath.getPath(), 
@@ -96,7 +113,8 @@ public class BasicRepositoryTest {
         // HSQL DB called "testdb".
         Properties props = DBUtils.getHSQLDBInMemoryDBConnection("testdb");
 
-        // Start up our database
+        // Start up our database by passing in the predefined properties
+        //
         mDatabaseUtil = new DBUtils(props.getProperty("URL"),
         		                    props.getProperty("driver"),
         		                    props.getProperty("user"),
@@ -141,6 +159,10 @@ public class BasicRepositoryTest {
 	 * **********************************************************
 	 */
 	
+    
+    /*
+     * Test that we have a repository up and running.
+     */
     @Test
 	public void testSetup() throws Exception {
     	
@@ -151,6 +173,9 @@ public class BasicRepositoryTest {
         
     }
     
+    /*
+     * Test that our import actually worked
+     */
     @Test
     public void testImport() throws Exception {
     	
@@ -162,6 +187,10 @@ public class BasicRepositoryTest {
         assertNotNull(item);
     }
     
+    
+    /*
+     * Test that we can interact with the repository
+     */
     @Test
     public void testRepositoryAction() throws Exception {
     	

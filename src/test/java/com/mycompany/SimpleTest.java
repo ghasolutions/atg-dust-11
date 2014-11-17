@@ -7,6 +7,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
+/**
+ * <p>Simple test to check the log4j debugging within the framework
+ * 
+ * @author dbrandt
+ *
+ */
 public class SimpleTest {
 	
 	private static Logger log = Logger.getLogger(SimpleTest.class);
