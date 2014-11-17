@@ -63,6 +63,7 @@ import atg.servlet.minimal.WebApplicationInterface;
 import atg.servlet.sessiontracking.GenericHttpSession;
 import atg.service.dynamo.AppServerConfig;
 import atg.core.net.URLUtils;
+
 import java.util.HashMap;
 import java.util.Collection;
 
@@ -2397,14 +2398,6 @@ public class ServletTestUtils {
 
     /**
      * @return
-     * @see atg.servlet.DynamoHttpServletRequest#getWebPools()
-     */
-    public WebPools getWebPools() {
-      return mRequest.getWebPools();
-    }
-
-    /**
-     * @return
      * @see atg.servlet.DynamoHttpServletRequest#getWindowScope()
      */
     public NameContext getWindowScope() {
@@ -3520,14 +3513,6 @@ public class ServletTestUtils {
      */
     public void setWebApplication(WebApplicationInterface pWebApplication) {
       mRequest.setWebApplication(pWebApplication);
-    }
-
-    /**
-     * @param pWebPools
-     * @see atg.servlet.DynamoHttpServletRequest#setWebPools(atg.servlet.WebPools)
-     */
-    public void setWebPools(WebPools pWebPools) {
-      mRequest.setWebPools(pWebPools);
     }
 
     /**

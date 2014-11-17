@@ -6,12 +6,12 @@
     <modelVersion>4.0.0</modelVersion>
 	<groupId>gha</groupId>
 	<artifactId>atg-dust</artifactId>
-	<version>10.1.2</version>
+	<version>11.1.0</version>
 	<packaging>jar</packaging>
 	<name>ATG Dust</name>
     
     <description>
-        This is a streamlined, updated version of ATG dust against ATG 10.1.2
+        This is a streamlined, updated version of ATG dust against ATG 11.1.0
         
         ATG DUST is a framework for building JUnit tests for applications built on the ATG Dynamo platform.
         This framework allows one to quickly write test code that depends up Nucleus or ATG Repositories.
@@ -19,15 +19,15 @@
         with a repository, but it may take multiple minutes to start up an application server. To get started with DUST,
         take a look at http://atgdust.sourceforge.net/first-test.html. This page will walk you through the process of running
         a basic test which starts Nucleus. After that, read the other getting started guides to describe how to create
-        standalone Junit tests which can startup repositories and use the DynamoHttpServletResponse classes.
+        standalone JUnit tests which can startup repositories and use the DynamoHttpServletResponse classes.
     </description>
   
   <properties>
       <!-- path to the atg install.  Used to locate dependencies and find the runassembler -->
-      <atg.path>/usr/local/atg/current</atg.path>
+      <atg.path>/usr/local/atg/ATG11.1.0</atg.path>
       
       <!-- Versioning for ATG dependency jars -->
-      <atg.artifact.version>10.1.2</atg.artifact.version>
+      <atg.artifact.version>11.1.0</atg.artifact.version>
       
       <!-- encoding to UTF-8 for platform independence -->
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
